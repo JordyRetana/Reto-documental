@@ -1,0 +1,995 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Reto documental</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #17202a;
+      --muted: #687783;
+      --line: #dbe4e8;
+      --paper: #f5f1e8;
+      --panel: #fffdf8;
+      --panel-strong: #ffffff;
+      --blue: #1f6f93;
+      --blue-dark: #134b67;
+      --green: #2d7a52;
+      --red: #b7473e;
+      --amber: #c07a21;
+      --violet: #6b5a9a;
+      --teal: #17706c;
+      --cream: #fff8e8;
+      --shadow: 0 22px 60px rgba(26, 43, 54, .16);
+      --soft-shadow: 0 12px 26px rgba(26, 43, 54, .1);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 12% 7%, rgba(31, 111, 147, .18), transparent 28%),
+        radial-gradient(circle at 88% 12%, rgba(192, 122, 33, .18), transparent 26%),
+        linear-gradient(135deg, rgba(23, 112, 108, .1), transparent 42%),
+        linear-gradient(180deg, rgba(255, 255, 255, .65), rgba(255, 255, 255, 0)),
+        var(--paper);
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: .28;
+      background-image:
+        linear-gradient(rgba(23, 32, 42, .055) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(23, 32, 42, .055) 1px, transparent 1px);
+      background-size: 34px 34px;
+      mask-image: linear-gradient(to bottom, #000, transparent 78%);
+    }
+
+    button, select { font: inherit; }
+
+    .app {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 26px 0 42px;
+      position: relative;
+    }
+
+    .topbar {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 18px;
+      align-items: center;
+      margin-bottom: 20px;
+      padding: 18px;
+      border: 1px solid rgba(255, 255, 255, .7);
+      border-radius: calc(var(--radius) + 8px);
+      background:
+        linear-gradient(135deg, rgba(255,255,255,.94), rgba(255,248,232,.88)),
+        var(--panel);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .topbar::after {
+      content: "";
+      position: absolute;
+      right: -42px;
+      top: -62px;
+      width: 220px;
+      height: 220px;
+      border: 28px solid rgba(31, 111, 147, .1);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .brand {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      min-width: 0;
+      position: relative;
+      z-index: 1;
+    }
+
+    .mark {
+      width: 70px;
+      height: 70px;
+      flex: 0 0 auto;
+      border: 1px solid rgba(31, 111, 147, .22);
+      border-radius: 20px;
+      background:
+        linear-gradient(145deg, rgba(255,255,255,.98), rgba(238, 247, 248, .92));
+      box-shadow: var(--soft-shadow);
+      display: grid;
+      place-items: center;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: clamp(1.75rem, 3vw, 3rem);
+      line-height: 1.05;
+      letter-spacing: 0;
+      color: #132b3a;
+    }
+
+    .brand p {
+      margin: 5px 0 0;
+      color: var(--muted);
+      line-height: 1.35;
+      max-width: 720px;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: flex-end;
+      position: relative;
+      z-index: 1;
+    }
+
+    .icon-btn, .primary, .secondary {
+      border: 1px solid rgba(31, 111, 147, .2);
+      background: var(--panel);
+      color: var(--ink);
+      min-height: 46px;
+      padding: 0 16px;
+      cursor: pointer;
+      border-radius: 14px;
+      box-shadow: 0 8px 16px rgba(26, 43, 54, .08);
+      transition: transform .16s ease, border-color .16s ease, background .16s ease, box-shadow .16s ease;
+    }
+
+    .icon-btn {
+      width: 46px;
+      padding: 0;
+      display: inline-grid;
+      place-items: center;
+    }
+
+    .primary {
+      background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+      color: white;
+      border-color: var(--blue);
+      font-weight: 700;
+    }
+
+    .secondary {
+      font-weight: 700;
+      background: #fffaf0;
+    }
+
+    .icon-btn:hover, .primary:hover, .secondary:hover {
+      transform: translateY(-2px);
+      border-color: rgba(19, 75, 103, .45);
+      box-shadow: 0 14px 26px rgba(26, 43, 54, .14);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .side, .game {
+      background: rgba(255,253,248,.92);
+      border: 1px solid rgba(255,255,255,.8);
+      box-shadow: var(--shadow);
+      border-radius: var(--radius);
+      backdrop-filter: blur(10px);
+    }
+
+    .side {
+      padding: 16px;
+      position: sticky;
+      top: 16px;
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .stat {
+      border: 1px solid rgba(31, 111, 147, .12);
+      border-radius: 16px;
+      background:
+        linear-gradient(160deg, rgba(255,255,255,.98), rgba(240,247,247,.92));
+      padding: 12px;
+      min-height: 82px;
+      box-shadow: 0 8px 18px rgba(26, 43, 54, .06);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat::after {
+      content: "";
+      position: absolute;
+      right: -18px;
+      bottom: -22px;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: rgba(31, 111, 147, .08);
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 1.55rem;
+      line-height: 1;
+      margin-bottom: 8px;
+      color: #14384a;
+      position: relative;
+      z-index: 1;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: .86rem;
+      line-height: 1.2;
+      position: relative;
+      z-index: 1;
+    }
+
+    .side h2, .panel-title {
+      margin: 0 0 10px;
+      font-size: .95rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: #31424f;
+    }
+
+    .module-list {
+      display: grid;
+      gap: 8px;
+      margin: 0 0 16px;
+      padding: 0;
+      list-style: none;
+    }
+
+    .module {
+      display: grid;
+      grid-template-columns: 14px 1fr auto;
+      gap: 9px;
+      align-items: center;
+      padding: 10px;
+      border: 1px solid rgba(31, 111, 147, .12);
+      border-radius: 14px;
+      background: rgba(255,255,255,.82);
+      color: #32434f;
+      font-size: .9rem;
+      box-shadow: 0 6px 14px rgba(26, 43, 54, .04);
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--blue);
+      box-shadow: 0 0 0 4px rgba(31, 111, 147, .1);
+    }
+
+    .module small { color: var(--muted); }
+
+    .controls {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    label {
+      display: grid;
+      gap: 6px;
+      font-weight: 700;
+      color: #31424f;
+    }
+
+    select {
+      width: 100%;
+      min-height: 46px;
+      border: 1px solid rgba(31, 111, 147, .18);
+      border-radius: 14px;
+      background: white;
+      padding: 0 12px;
+      color: var(--ink);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.7);
+    }
+
+    .game {
+      min-height: 640px;
+      overflow: hidden;
+    }
+
+    .progress-wrap {
+      padding: 18px 20px 0;
+    }
+
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      color: #3c5060;
+      font-size: .92rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .progress {
+      height: 14px;
+      border: 1px solid rgba(31, 111, 147, .14);
+      border-radius: 999px;
+      background: #e7eef0;
+      overflow: hidden;
+      box-shadow: inset 0 2px 5px rgba(26, 43, 54, .08);
+    }
+
+    .progress span {
+      display: block;
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--green), var(--teal), var(--blue));
+      transition: width .25s ease;
+    }
+
+    .question-area {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 250px;
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .card {
+      border: 1px solid rgba(31, 111, 147, .14);
+      border-radius: var(--radius);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.98), rgba(255,253,248,.98));
+      padding: 26px;
+      box-shadow: var(--soft-shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto;
+      height: 8px;
+      background: linear-gradient(90deg, var(--blue), var(--green), var(--amber));
+    }
+
+    .kicker {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 32px;
+      padding: 0 11px;
+      border: 1px solid rgba(31, 111, 147, .18);
+      border-radius: 999px;
+      background: #f7fbfa;
+      color: #384a56;
+      font-size: .82rem;
+      font-weight: 700;
+      box-shadow: 0 5px 10px rgba(26, 43, 54, .05);
+    }
+
+    .question {
+      margin: 0 0 20px;
+      font-size: clamp(1.25rem, 2.4vw, 2rem);
+      line-height: 1.2;
+      letter-spacing: 0;
+      color: #122d3d;
+      max-width: 820px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .options {
+      display: grid;
+      gap: 12px;
+      margin-top: 18px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .option {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 40px 1fr;
+      gap: 14px;
+      align-items: center;
+      min-height: 66px;
+      padding: 12px 14px;
+      border: 1px solid rgba(31, 111, 147, .14);
+      border-radius: 16px;
+      background:
+        linear-gradient(180deg, #ffffff, #f7fbfa);
+      text-align: left;
+      cursor: pointer;
+      box-shadow: 0 8px 18px rgba(26, 43, 54, .06);
+      transition: transform .16s ease, border-color .16s ease, box-shadow .16s ease, background .16s ease;
+    }
+
+    .option:hover:not(:disabled) {
+      transform: translateY(-2px);
+      border-color: rgba(31, 111, 147, .42);
+      box-shadow: 0 14px 28px rgba(26, 43, 54, .12);
+      background: #ffffff;
+    }
+
+    .option .letter {
+      display: grid;
+      place-items: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 13px;
+      background: linear-gradient(145deg, #e6f0f3, #f8fbfb);
+      color: #14384a;
+      font-weight: 800;
+      box-shadow: inset 0 -1px 0 rgba(26, 43, 54, .08);
+    }
+
+    .option.correct {
+      border-color: rgba(47, 125, 82, .85);
+      background: linear-gradient(180deg, #f2fbf4, #e6f5eb);
+    }
+
+    .option.correct .letter {
+      background: var(--green);
+      color: white;
+    }
+
+    .option.wrong {
+      border-color: rgba(180, 74, 67, .8);
+      background: linear-gradient(180deg, #fff6f4, #ffe8e5);
+    }
+
+    .option.wrong .letter {
+      background: var(--red);
+      color: white;
+    }
+
+    .option:disabled {
+      cursor: default;
+      opacity: .98;
+    }
+
+    .feedback {
+      display: none;
+      margin-top: 18px;
+      border-left: 5px solid var(--blue);
+      border-radius: 14px;
+      background: #f2f8fa;
+      padding: 15px 16px;
+      line-height: 1.45;
+      box-shadow: 0 8px 18px rgba(26, 43, 54, .06);
+    }
+
+    .feedback.show { display: block; }
+    .feedback.good { border-color: var(--green); }
+    .feedback.bad { border-color: var(--red); }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .map {
+      border: 1px solid rgba(31, 111, 147, .14);
+      border-radius: var(--radius);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.96), rgba(255,248,232,.72));
+      padding: 16px;
+      min-height: 260px;
+      box-shadow: var(--soft-shadow);
+    }
+
+    .map svg {
+      width: 100%;
+      height: auto;
+      display: block;
+      filter: drop-shadow(0 8px 12px rgba(26, 43, 54, .08));
+    }
+
+    .review-list {
+      margin: 14px 0 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 8px;
+      max-height: 230px;
+      overflow: auto;
+    }
+
+    .review-list li {
+      border: 1px solid rgba(31, 111, 147, .12);
+      border-radius: 12px;
+      padding: 10px;
+      background: white;
+      color: var(--muted);
+      font-size: .84rem;
+      line-height: 1.3;
+      box-shadow: 0 5px 12px rgba(26, 43, 54, .04);
+    }
+
+    .summary {
+      display: none;
+      padding: 28px;
+    }
+
+    .summary.show { display: block; }
+
+    .summary h2 {
+      margin: 0 0 8px;
+      font-size: clamp(1.45rem, 2.4vw, 2.2rem);
+      letter-spacing: 0;
+      color: #132b3a;
+    }
+
+    .summary p {
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin: 18px 0;
+    }
+
+    .hidden { display: none !important; }
+
+    @media (max-width: 900px) {
+      .topbar, .layout, .question-area {
+        grid-template-columns: 1fr;
+      }
+
+      .toolbar { justify-content: flex-start; }
+      .side { position: static; }
+      .game { order: 1; }
+      .side { order: 2; }
+      .game { min-height: auto; }
+      .map { min-height: 0; }
+    }
+
+    @media (max-width: 560px) {
+      .app { width: min(100% - 20px, 1180px); padding-top: 12px; }
+      .brand { align-items: flex-start; }
+      .mark { width: 52px; height: 52px; border-radius: 16px; }
+      .stat-grid { grid-template-columns: 1fr 1fr; }
+      .summary-grid { grid-template-columns: 1fr; }
+      .stat { min-height: 74px; padding: 10px; }
+      .topbar, .question-area, .card, .summary { padding: 14px; }
+      .progress-wrap { padding: 14px 14px 0; }
+      .option { grid-template-columns: 34px 1fr; padding: 10px; }
+      .option .letter { width: 34px; height: 34px; border-radius: 11px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="mark" aria-hidden="true">
+          <svg viewBox="0 0 64 64" role="img">
+            <rect x="12" y="10" width="30" height="42" fill="#f2f7f8" stroke="#246b8f" stroke-width="3"/>
+            <path d="M22 20h22M22 29h18M22 38h14" stroke="#2f7d52" stroke-width="4" stroke-linecap="square"/>
+            <circle cx="47" cy="45" r="9" fill="#bd7b1f"/>
+            <path d="M43 45l3 3 6-7" fill="none" stroke="#fff" stroke-width="3"/>
+          </svg>
+        </div>
+        <div>
+          <h1>Reto documental</h1>
+          <p>Juego de repaso basado en tus PDFs de analisis documental, resumenes, lenguajes, tesauros y registros bibliograficos.</p>
+        </div>
+      </div>
+      <div class="toolbar" aria-label="Acciones del juego">
+        <button class="icon-btn" id="shuffleBtn" title="Mezclar preguntas" aria-label="Mezclar preguntas">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M16 3h5v5M4 20l17-17M21 16v5h-5M15 15l6 6M4 4l5 5" stroke="currentColor" stroke-width="2" stroke-linecap="square"/></svg>
+        </button>
+        <button class="secondary" id="reviewBtn">Repasar falladas</button>
+        <button class="primary" id="restartBtn">Reiniciar</button>
+      </div>
+    </header>
+
+    <section class="layout">
+      <aside class="side" aria-label="Marcador y modulos">
+        <div class="stat-grid">
+          <div class="stat"><strong id="score">0</strong><span>Puntos</span></div>
+          <div class="stat"><strong id="streak">0</strong><span>Racha</span></div>
+          <div class="stat"><strong id="accuracy">0%</strong><span>Acierto</span></div>
+          <div class="stat"><strong id="lives">5</strong><span>Vidas</span></div>
+        </div>
+
+        <h2>Modulos</h2>
+        <ul class="module-list" id="moduleList"></ul>
+
+        <div class="controls">
+          <label for="moduleSelect">Practicar tema
+            <select id="moduleSelect"></select>
+          </label>
+          <label for="lengthSelect">Cantidad
+            <select id="lengthSelect">
+              <option value="30">30 preguntas</option>
+              <option value="45" selected>45 preguntas</option>
+              <option value="60">60 preguntas</option>
+              <option value="all">Todas</option>
+            </select>
+          </label>
+        </div>
+      </aside>
+
+      <section class="game" aria-live="polite">
+        <div class="progress-wrap" id="playHeader">
+          <div class="progress-meta">
+            <span id="counter">Pregunta 1 de 45</span>
+            <span id="modeLabel">Todos los temas</span>
+          </div>
+          <div class="progress" aria-label="Progreso"><span id="progressBar"></span></div>
+        </div>
+
+        <div class="question-area" id="playArea">
+          <article class="card">
+            <div class="kicker">
+              <span class="badge" id="topicBadge">Tema</span>
+              <span class="badge" id="difficultyBadge">Nivel</span>
+            </div>
+            <h2 class="question" id="questionText"></h2>
+            <div class="options" id="options"></div>
+            <div class="feedback" id="feedback"></div>
+            <div class="actions">
+              <button class="primary hidden" id="nextBtn">Siguiente</button>
+              <button class="secondary hidden" id="explainBtn">Ver pista</button>
+            </div>
+          </article>
+
+          <aside class="map">
+            <div class="panel-title">Ruta de estudio</div>
+            <svg viewBox="0 0 210 210" aria-label="Ruta visual de avance">
+              <path d="M34 180C58 145 24 128 54 98s58-6 78-34 34-25 48-36" fill="none" stroke="#d3dde1" stroke-width="10" stroke-linecap="square"/>
+              <path id="routePath" d="M34 180C58 145 24 128 54 98s58-6 78-34 34-25 48-36" fill="none" stroke="#246b8f" stroke-width="10" stroke-linecap="square" stroke-dasharray="260" stroke-dashoffset="260"/>
+              <g fill="#fff" stroke="#2f7d52" stroke-width="4">
+                <circle cx="34" cy="180" r="12"/><circle cx="57" cy="100" r="12"/><circle cx="132" cy="64" r="12"/><circle cx="180" cy="28" r="12"/>
+              </g>
+              <g fill="#17202a" font-size="13" font-family="Arial, Helvetica, sans-serif" font-weight="700">
+                <text x="24" y="204">inicio</text><text x="33" y="82">base</text><text x="111" y="45">retos</text><text x="153" y="16">meta</text>
+              </g>
+            </svg>
+            <div class="panel-title">Falladas</div>
+            <ul class="review-list" id="missedList"></ul>
+          </aside>
+        </div>
+
+        <section class="summary" id="summary">
+          <h2 id="summaryTitle">Resultado</h2>
+          <p id="summaryText"></p>
+          <div class="summary-grid">
+            <div class="stat"><strong id="finalScore">0</strong><span>Puntos finales</span></div>
+            <div class="stat"><strong id="finalAccuracy">0%</strong><span>Porcentaje</span></div>
+            <div class="stat"><strong id="finalMissed">0</strong><span>Para repasar</span></div>
+          </div>
+          <div class="actions">
+            <button class="primary" id="againBtn">Jugar otra vez</button>
+            <button class="secondary" id="summaryReviewBtn">Practicar falladas</button>
+          </div>
+        </section>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    const QUESTIONS = [
+      { t: "Analisis documental", d: "Base", q: "Segun el material, el analisis documental busca representar un documento bajo una forma diferente para facilitar...", a: 1, o: ["La decoracion visual del documento", "La consulta o recuperacion por especialistas interesados", "La compra de nuevos materiales", "La eliminacion de documentos duplicados"], e: "El analisis documental traduce, resume o indiza para facilitar la consulta y recuperacion." },
+      { t: "Analisis documental", d: "Base", q: "Una definicion breve de analisis documental es...", a: 2, o: ["Copiar literalmente todo el documento", "Ordenar libros por tamano fisico", "Extraer elementos caracteristicos del documento", "Disenar portadas de documentos"], e: "El PDF lo define como la operacion de extraer elementos caracteristicos y derivar palabras de representacion condensada." },
+      { t: "Analisis documental", d: "Media", q: "Cual NO aparece como objetivo del analisis documental?", a: 3, o: ["Identificar y localizar documentos", "Contribuir al conocimiento del contenido", "Objetividad y normalizacion", "Aumentar la extension del documento original"], e: "Los objetivos apuntan a identificar, recuperar, representar contenido y normalizar, no a extender el texto." },
+      { t: "Analisis documental", d: "Base", q: "La tipologia del documento se puede observar por soporte fisico, difusion y...", a: 0, o: ["Contenido informativo", "Precio comercial", "Color de la cubierta", "Numero de autores"], e: "El material enumera soporte fisico, difusion y contenido informativo." },
+      { t: "Analisis documental", d: "Media", q: "Cuales son categorias de difusion mencionadas?", a: 1, o: ["Textuales, graficos, sonoros", "Publicados, reservados e ineditos", "Primarios, secundarios y terciarios", "Resumen, indice y tesauro"], e: "La difusion se clasifica en publicados, reservados e ineditos." },
+      { t: "Analisis documental", d: "Alta", q: "Las problematicas del analisis documental incluyen naturaleza linguistica, extralinguistica y...", a: 2, o: ["Naturaleza monetaria", "Indole juridica", "Indole documental", "Naturaleza editorial"], e: "La indole documental se relaciona con la tematica tratada." },
+      { t: "Analisis documental", d: "Media", q: "En la cadena del procesamiento tecnico, el orden presentado es seleccion, adquisicion, catalogacion, clasificacion e...", a: 3, o: ["Inventario", "Circulacion", "Encuadernacion", "Indizacion"], e: "La cadena termina con indizacion dentro de la secuencia mostrada." },
+      { t: "Indizacion", d: "Base", q: "La indizacion consiste en representar el contenido del documento mediante...", a: 0, o: ["Terminos de indizacion extraidos de lenguajes documentales", "Firmas de usuarios frecuentes", "Imagenes decorativas", "Codigos de barras exclusivamente"], e: "La indizacion usa terminos de indizacion procedentes de lenguajes documentales." },
+      { t: "Indizacion", d: "Media", q: "Las dos operaciones principales del analisis de contenido son...", a: 2, o: ["Compra y descarte", "Catalogacion y circulacion", "Resumen e indizacion", "Encuadernacion y restauracion"], e: "El analisis de contenido establece puntos de acceso por materias mediante resumen e indizacion." },
+      { t: "Indizacion", d: "Base", q: "Un descriptor es una palabra o grupo de palabras escogidas para representar...", a: 1, o: ["La editorial del libro", "Sin ambiguedad un concepto de un documento", "El precio de adquisicion", "La fecha de devolucion"], e: "El descriptor se elige entre terminos equivalentes para representar un concepto sin ambiguedad." },
+      { t: "Indizacion", d: "Media", q: "Un no descriptor es...", a: 3, o: ["Un termino obligatorio para indizar", "Un campo MARC de autores", "Una palabra vacia sin significado", "Un termino con prohibicion de uso y reenvio a descriptores"], e: "El no descriptor remite desde un termino no preferente hacia un descriptor utilizable." },
+      { t: "Indizacion", d: "Alta", q: "Diferencia correcta entre descriptores libres y palabras clave:", a: 0, o: ["Los descriptores libres indizan conceptos; las palabras clave suelen indizar uniterminos", "Los descriptores libres son siempre automaticos", "Las palabras clave siempre salen de un tesauro controlado", "No existe diferencia en el material"], e: "El PDF contrapone indizacion humana de conceptos frente a extraccion automatica de uniterminos." },
+
+      { t: "Resumenes documentales", d: "Base", q: "La norma citada define resumen como una representacion abreviada y precisa del contenido, sin...", a: 2, o: ["Titulo ni autor", "Paginas ni capitulos", "Interpretacion ni critica", "Palabras significativas"], e: "El resumen documental no debe incluir interpretacion ni critica del autor del resumen." },
+      { t: "Resumenes documentales", d: "Base", q: "Una pregunta que Lancaster recomienda al indizador es:", a: 1, o: ["Cuanto cuesta imprimir el documento?", "De que trata el documento?", "Quien diseno la portada?", "Cual es el color institucional?"], e: "Lancaster propone preguntar de que trata, por que esta en la coleccion y que interesa al usuario." },
+      { t: "Resumenes documentales", d: "Media", q: "Cual criterio general significa emplear el menor numero de terminos?", a: 0, o: ["Brevedad", "Textualidad", "Exhaustividad", "Objetividad"], e: "Brevedad se asocia con usar el menor numero de terminos." },
+      { t: "Resumenes documentales", d: "Media", q: "El criterio de exhaustividad pide...", a: 3, o: ["Usar muchas citas", "Cambiar el sentido del texto", "Evitar todo resultado", "No omitir partes sustanciales"], e: "Exhaustividad significa cubrir las partes sustanciales sin dejarlas fuera." },
+      { t: "Resumenes documentales", d: "Media", q: "Un resumen independiente debe...", a: 2, o: ["Depender de graficos del documento", "Citar todas las referencias", "Entenderse por si mismo", "Incluir opiniones del resumidor"], e: "Independiente significa que se entiende sin acudir al documento original." },
+      { t: "Resumenes documentales", d: "Base", q: "Cual de estos aparece como elemento posible de un resumen?", a: 1, o: ["Color de portada", "Metodologia", "Numero de inventario", "Tipo de papel"], e: "El material lista introduccion, objetivo, aspectos teoricos, metodologia, resultados y conclusiones." },
+      { t: "Resumenes documentales", d: "Media", q: "Segun los lineamientos comunes, se debe dejar por fuera...", a: 0, o: ["Ejemplos, definiciones y explicaciones", "El objetivo del documento siempre", "Todos los resultados", "Todas las palabras significativas"], e: "Los lineamientos recomiendan excluir ejemplos, definiciones, graficos, tablas, referencias y lo marginal." },
+      { t: "Resumenes documentales", d: "Alta", q: "Una recomendacion de redaccion es iniciar con...", a: 3, o: ["Una critica personal", "Una referencia bibliografica completa", "Un listado de siglas poco frecuentes", "Una frase que represente la idea basica del tema principal"], e: "El resumen debe arrancar con la idea basica del tema principal e indicar el tipo de documento." },
+
+      { t: "Tipos de resumen", d: "Base", q: "El resumen indicativo o descriptivo se caracteriza por ser...", a: 0, o: ["Corto y general", "Siempre mayor a 500 palabras", "Una reseña con juicio critico", "Un registro MARC completo"], e: "El indicativo es corto, general y suele ir de 25 a 50 palabras." },
+      { t: "Tipos de resumen", d: "Media", q: "El resumen indicativo normalmente NO incluye...", a: 2, o: ["Objetivo", "Resultados", "Metodologia ni conclusiones", "Tema general"], e: "El PDF indica que contiene objetivo y resultados, pero no metodologia ni conclusiones." },
+      { t: "Tipos de resumen", d: "Base", q: "El resumen informativo contiene objetivos, metodos, resultados y conclusiones, y suele tener...", a: 1, o: ["25 a 50 palabras", "100 a 300 palabras", "Una sola frase", "Mas de 1000 palabras siempre"], e: "El informativo es el resumen documental por excelencia y se ubica entre 100 y 300 palabras." },
+      { t: "Tipos de resumen", d: "Alta", q: "El resumen analitico se distingue porque...", a: 3, o: ["Solo enumera palabras clave", "Elimina resultados y conclusiones", "Se usa solo en cuentos infantiles", "Puede sobrepasar 500 palabras y exige alto detalle"], e: "Es el nivel mas detallado, poco habitual por el tiempo que consume." },
+      { t: "Tipos de resumen", d: "Media", q: "El resumen literario debe contener trama, personajes principales, donde y cuando sucede la obra y...", a: 0, o: ["Desenlace final", "Indicadores MARC", "Terminos especificos", "Codigo de barras"], e: "El PDF incluye desenlace final, aunque advierte no hacer spoiler de la trama." },
+      { t: "Tipos de resumen", d: "Media", q: "En MARC Bibliografico, la nota de sumario o resumen se registra en el campo...", a: 2, o: ["245", "650", "520", "856"], e: "El campo 520 se usa para sumario, reseña, alcance y contenido, resumen o aviso de contenido." },
+      { t: "Tipos de resumen", d: "Alta", q: "En el campo 520, el primer indicador 3 corresponde a...", a: 1, o: ["Reseña", "Resumen", "Alcance y contenido", "Aviso sobre contenido"], e: "Los indicadores presentados son #: sumario, 1: reseña, 2: alcance y contenido, 3: resumen, 4: aviso." },
+
+      { t: "Lenguajes documentales", d: "Base", q: "Un lenguaje documental es un vocabulario o sistema artificial de signos normalizados que facilita...", a: 0, o: ["La representacion del contenido de los documentos", "La impresion a color", "La compra de libros", "El calculo de multas"], e: "Su funcion central es representar contenido y facilitar recuperacion." },
+      { t: "Lenguajes documentales", d: "Media", q: "Cual es un objetivo de los lenguajes documentales?", a: 3, o: ["Ocultar alternativas de busqueda", "Aumentar ruido documental", "Eliminar la normalizacion", "Reducir esfuerzo y tiempo del usuario"], e: "El material menciona reducir esfuerzo y tiempo, normalizar terminologias y mostrar alternativas." },
+      { t: "Lenguajes documentales", d: "Base", q: "Los lenguajes libres tienen como ventaja ser baratos, rapidos y terminologicamente ricos, pero presentan...", a: 2, o: ["Demasiada normalizacion", "Ausencia total de terminos", "Ambiguedad, silencio y ruido documental", "Solo documentos impresos"], e: "La ambiguedad puede generar silencio y ruido documental y demasiados resultados." },
+      { t: "Lenguajes documentales", d: "Media", q: "Un listado de descriptores libres es...", a: 1, o: ["Un tesauro con relaciones jerarquicas obligatorias", "Un vocabulario monolingue alfabético elegido por el analista sin lista previa", "Una lista exclusiva de autores", "Un campo Dublin Core"], e: "No es lenguaje controlado; el analista selecciona los terminos sin verificar en lista establecida." },
+      { t: "Lenguajes documentales", d: "Alta", q: "El lenguaje documental traslada dificultad al proceso de indizacion para producir facilidad en...", a: 0, o: ["La recuperacion", "La impresion", "La encuadernacion", "La portada"], e: "La dificultad se asume al indizar para facilitar luego la recuperacion." },
+
+      { t: "Tesauros", d: "Base", q: "Los lenguajes postcoordinados combinan los terminos en el momento de...", a: 1, o: ["La adquisicion", "La recuperacion", "La impresion", "La restauracion"], e: "El material define los postcoordinados como lenguajes que combinan terminos al recuperar." },
+      { t: "Tesauros", d: "Media", q: "En un tesauro, las relaciones de equivalencia aplican entre...", a: 2, o: ["Autores y editoriales", "Campos y subcampos MARC", "Terminos preferentes y no preferentes", "Fechas y lugares solamente"], e: "USE y UP conectan formas preferentes y no preferentes." },
+      { t: "Tesauros", d: "Media", q: "Si 'bibliobus USE biblioteca movil', entonces 'bibliobus' funciona como...", a: 3, o: ["Termino generico", "Termino especifico", "Nota de historia", "No preferente que remite al preferente"], e: "USE indica que debe usarse el descriptor preferente indicado." },
+      { t: "Tesauros", d: "Media", q: "Las relaciones jerarquicas se establecen cuando el alcance de un concepto queda dentro del alcance de otro. Sus etiquetas generales son...", a: 0, o: ["TG y TE", "TR y NH", "DEF y USE", "MARC y DC"], e: "TG es termino generico y TE es termino especifico." },
+      { t: "Tesauros", d: "Alta", q: "La relacion generica conecta una clase o categoria con...", a: 1, o: ["Una nota de historia", "Sus miembros o especies", "Una fuente bibliografica", "Un acronimo ambiguo"], e: "Ejemplo del material: todos los loros son pajaros, algunos pajaros son loros." },
+      { t: "Tesauros", d: "Alta", q: "La relacion jerarquica todo-parte aplica a casos donde una parte pertenece a un todo, como...", a: 2, o: ["UNICEF y su forma desarrollada", "Bibliobus y biblioteca movil", "Puntarenas y Costa Rica", "520 y resumen"], e: "El PDF usa Costa Rica TEP Puntarenas y Puntarenas TGP Costa Rica." },
+      { t: "Tesauros", d: "Alta", q: "La relacion enumerativa conecta un concepto general con una instancia individual, por ejemplo...", a: 3, o: ["Casa y vivienda", "Ropa y confeccion", "Bibliobus y biblioteca movil", "Himalaya y regiones de montana"], e: "Himalaya es una instancia nombrada dentro de regiones de montana." },
+      { t: "Tesauros", d: "Media", q: "Las relaciones asociativas se representan con...", a: 0, o: ["TR", "TG", "TE", "NH"], e: "TR significa termino relacionado y se aplica reciprocamente." },
+      { t: "Tesauros", d: "Alta", q: "Cual par ejemplifica relacion asociativa segun el material?", a: 1, o: ["Animales y mamiferos", "Pajaros y ornitologia", "Casa y vivienda", "520 y sumario"], e: "Pajaros TR ornitologia muestra asociacion semantica sin jerarquia." },
+      { t: "Tesauros", d: "Media", q: "Para homografos u homonimos en un tesauro se debe...", a: 2, o: ["Eliminarlos siempre", "Usar solo mayusculas", "Clarificar el significado de cada termino", "Convertirlos en campos MARC"], e: "Ejemplo: gatos (animales domesticos) y gatos (equipos de levantamiento de pesos)." },
+      { t: "Tesauros", d: "Media", q: "Segun la gramatica de terminos, los adverbios en tesauros...", a: 3, o: ["Son obligatorios", "Son mejores que sustantivos", "Deben iniciar todas las frases", "No deberian usarse"], e: "El material indica que los adverbios no deberian usarse, menos frases que comiencen con ellos." },
+      { t: "Tesauros", d: "Alta", q: "Sobre acronimos en tesauros, la recomendacion correcta es...", a: 0, o: ["No usarlos si generan ambiguedad; usarlos si son reconocidos sin ambiguedad", "Usarlos siempre aunque sean desconocidos", "Prohibir UNICEF aunque sea claro", "Preferir siempre simbolos especiales"], e: "MICITT se remite a su forma completa si puede ser ambiguo; UNICEF puede usarse si es ampliamente reconocido." },
+
+      { t: "Registros bibliograficos", d: "Base", q: "En el ejemplo de El Principito, el campo 001 corresponde a...", a: 1, o: ["ISBN", "Numero de control", "Titulo", "Nota de sumario"], e: "El registro muestra 001 como numero de control." },
+      { t: "Registros bibliograficos", d: "Media", q: "El campo 020 registra...", a: 0, o: ["ISBN", "Idioma", "Nota de lengua", "Localizacion electronica"], e: "020 se usa para el Numero Internacional Normalizado para Libros." },
+      { t: "Registros bibliograficos", d: "Media", q: "El campo 245 se usa para...", a: 2, o: ["Tipo de soporte", "Punto cronologico", "Mencion de titulo", "Termino no controlado"], e: "245 contiene la mencion de titulo y responsabilidad." },
+      { t: "Registros bibliograficos", d: "Media", q: "El campo 600 se utiliza cuando el punto de acceso tematico es...", a: 3, o: ["Un lugar geografico", "Un termino cronologico", "Una forma o genero", "El nombre de una persona"], e: "600 es punto de acceso adicional de materia - nombre de persona." },
+      { t: "Registros bibliograficos", d: "Media", q: "El campo 648 corresponde a puntos de acceso de tipo...", a: 1, o: ["Geografico", "Cronologico", "Genero o forma", "Localizacion web"], e: "648 registra terminos cronologicos, como 1943." },
+      { t: "Registros bibliograficos", d: "Alta", q: "El campo 650 se usa para puntos de acceso tematicos que provienen de una fuente controlada como...", a: 0, o: ["LEMB, tesauros o catalogos de autoridad de materia", "Solo redes sociales", "Unicamente inventarios locales", "Notas personales del lector"], e: "El PDF dice que 650 registra terminos de materia procedentes de fuentes controladas." },
+      { t: "Registros bibliograficos", d: "Media", q: "El campo 651 registra...", a: 2, o: ["Nombres personales", "Terminos no controlados", "Nombre geografico", "Tipo de contenido"], e: "651 es punto de acceso adicional de materia - nombre geografico." },
+      { t: "Registros bibliograficos", d: "Alta", q: "Cuando un termino es novedoso, no esta en ningun tesauro y es necesario para describir contenido, se puede usar...", a: 3, o: ["600", "650", "655", "653"], e: "653 es termino de indizacion no controlado." },
+      { t: "Registros bibliograficos", d: "Media", q: "El campo 655 se usa para...", a: 1, o: ["ISBN", "Genero o forma", "Nombre de persona", "Origen de catalogacion"], e: "655 corresponde a termino de indizacion - genero o forma." },
+      { t: "Registros bibliograficos", d: "Alta", q: "En el registro Dublin Core del ejemplo, dc.abstract corresponde a...", a: 0, o: ["La narracion/resumen de la obra", "El ISBN solamente", "La lengua original", "La editorial"], e: "dc.abstract contiene el resumen sobre el pequeno principe y su travesia." }
+    ];
+
+    const topicColors = {
+      "Analisis documental": "#246b8f",
+      "Indizacion": "#2f7d52",
+      "Resumenes documentales": "#bd7b1f",
+      "Tipos de resumen": "#6b5a9a",
+      "Lenguajes documentales": "#17706c",
+      "Tesauros": "#8d5a2b",
+      "Registros bibliograficos": "#b44a43"
+    };
+
+    const state = {
+      deck: [],
+      index: 0,
+      score: 0,
+      streak: 0,
+      answered: 0,
+      correct: 0,
+      lives: 5,
+      missed: [],
+      locked: false,
+      hintVisible: false
+    };
+
+    const $ = (id) => document.getElementById(id);
+
+    function shuffle(items) {
+      const copy = [...items];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function initSelectors() {
+      const topics = ["Todos los temas", ...new Set(QUESTIONS.map(q => q.t))];
+      $("moduleSelect").innerHTML = topics.map(t => `<option value="${t}">${t}</option>`).join("");
+      renderModules();
+    }
+
+    function renderModules() {
+      const counts = QUESTIONS.reduce((acc, q) => {
+        acc[q.t] = (acc[q.t] || 0) + 1;
+        return acc;
+      }, {});
+      $("moduleList").innerHTML = Object.entries(counts).map(([topic, count]) => `
+        <li class="module">
+          <span class="dot" style="background:${topicColors[topic]}"></span>
+          <span>${topic}</span>
+          <small>${count}</small>
+        </li>
+      `).join("");
+    }
+
+    function buildDeck(source = QUESTIONS) {
+      const topic = $("moduleSelect").value || "Todos los temas";
+      const desired = $("lengthSelect").value;
+      let pool = topic === "Todos los temas" ? source : source.filter(q => q.t === topic);
+      pool = shuffle(pool);
+      if (desired !== "all") pool = pool.slice(0, Math.min(Number(desired), pool.length));
+      state.deck = pool;
+      state.index = 0;
+      state.score = 0;
+      state.streak = 0;
+      state.answered = 0;
+      state.correct = 0;
+      state.lives = 5;
+      state.missed = [];
+      state.locked = false;
+      state.hintVisible = false;
+      $("summary").classList.remove("show");
+      $("playArea").classList.remove("hidden");
+      $("playHeader").classList.remove("hidden");
+      updateStats();
+      renderQuestion();
+    }
+
+    function updateStats() {
+      $("score").textContent = state.score;
+      $("streak").textContent = state.streak;
+      $("accuracy").textContent = state.answered ? `${Math.round((state.correct / state.answered) * 100)}%` : "0%";
+      $("lives").textContent = state.lives;
+      $("missedList").innerHTML = state.missed.length
+        ? state.missed.slice(-8).reverse().map(q => `<li><strong>${q.t}</strong><br>${q.q}</li>`).join("")
+        : `<li>Todavia no hay preguntas falladas.</li>`;
+      const progress = state.deck.length ? (state.index / state.deck.length) * 100 : 0;
+      $("progressBar").style.width = `${progress}%`;
+      $("routePath").style.strokeDashoffset = 260 - (260 * progress / 100);
+    }
+
+    function renderQuestion() {
+      if (!state.deck.length) {
+        showSummary("No hay preguntas para este filtro.", "Cambia el tema o elige otra cantidad.");
+        return;
+      }
+
+      if (state.index >= state.deck.length || state.lives <= 0) {
+        const title = state.lives <= 0 ? "Se acabaron las vidas" : "Ronda completada";
+        const pct = state.answered ? Math.round((state.correct / state.answered) * 100) : 0;
+        const text = pct >= 85
+          ? "Muy buen dominio. Tu siguiente paso es repasar las falladas para cerrar detalles finos."
+          : pct >= 65
+            ? "Vas bien. Hay conceptos que ya estan firmes y otros que piden una segunda vuelta."
+            : "Conviene repasar por modulos, especialmente las preguntas falladas.";
+        showSummary(title, text);
+        return;
+      }
+
+      state.locked = false;
+      state.hintVisible = false;
+      const q = state.deck[state.index];
+      $("counter").textContent = `Pregunta ${state.index + 1} de ${state.deck.length}`;
+      $("modeLabel").textContent = $("moduleSelect").value;
+      $("topicBadge").textContent = q.t;
+      $("topicBadge").style.borderColor = topicColors[q.t];
+      $("difficultyBadge").textContent = q.d;
+      $("questionText").textContent = q.q;
+      $("feedback").className = "feedback";
+      $("feedback").textContent = "";
+      $("nextBtn").classList.add("hidden");
+      $("explainBtn").classList.remove("hidden");
+
+      $("options").innerHTML = q.o.map((option, i) => `
+        <button class="option" data-index="${i}">
+          <span class="letter">${String.fromCharCode(65 + i)}</span>
+          <span>${option}</span>
+        </button>
+      `).join("");
+
+      document.querySelectorAll(".option").forEach(btn => {
+        btn.addEventListener("click", () => answer(Number(btn.dataset.index)));
+      });
+      updateStats();
+    }
+
+    function answer(choice) {
+      if (state.locked) return;
+      state.locked = true;
+      const q = state.deck[state.index];
+      const isCorrect = choice === q.a;
+      state.answered++;
+
+      document.querySelectorAll(".option").forEach((btn, i) => {
+        btn.disabled = true;
+        if (i === q.a) btn.classList.add("correct");
+        if (i === choice && !isCorrect) btn.classList.add("wrong");
+      });
+
+      if (isCorrect) {
+        state.correct++;
+        state.streak++;
+        state.score += 100 + Math.min(state.streak * 15, 150);
+      } else {
+        state.streak = 0;
+        state.lives--;
+        state.missed.push(q);
+      }
+
+      const fb = $("feedback");
+      fb.className = `feedback show ${isCorrect ? "good" : "bad"}`;
+      fb.innerHTML = `<strong>${isCorrect ? "Correcto." : "Revisalo."}</strong> ${q.e}`;
+      $("nextBtn").classList.remove("hidden");
+      $("explainBtn").classList.add("hidden");
+      state.index++;
+      updateStats();
+    }
+
+    function showHint() {
+      if (state.hintVisible) return;
+      state.hintVisible = true;
+      const q = state.deck[state.index];
+      const fb = $("feedback");
+      fb.className = "feedback show";
+      fb.innerHTML = `<strong>Pista:</strong> Esta pregunta pertenece a ${q.t}. Piensa en la funcion del concepto dentro del proceso documental antes de responder.`;
+    }
+
+    function showSummary(title, text) {
+      $("playArea").classList.add("hidden");
+      $("playHeader").classList.add("hidden");
+      $("summary").classList.add("show");
+      $("summaryTitle").textContent = title;
+      $("summaryText").textContent = text;
+      $("finalScore").textContent = state.score;
+      $("finalAccuracy").textContent = state.answered ? `${Math.round((state.correct / state.answered) * 100)}%` : "0%";
+      $("finalMissed").textContent = state.missed.length;
+      $("progressBar").style.width = "100%";
+    }
+
+    function reviewMissed() {
+      if (!state.missed.length) {
+        showSummary("No hay falladas todavia", "Juega una ronda primero; cuando falles alguna, aparece aqui para repasarla.");
+        return;
+      }
+      const missed = [...state.missed];
+      $("moduleSelect").value = "Todos los temas";
+      state.deck = shuffle(missed);
+      state.index = 0;
+      state.score = 0;
+      state.streak = 0;
+      state.answered = 0;
+      state.correct = 0;
+      state.lives = 5;
+      state.missed = [];
+      $("summary").classList.remove("show");
+      $("playArea").classList.remove("hidden");
+      $("playHeader").classList.remove("hidden");
+      renderQuestion();
+    }
+
+    $("nextBtn").addEventListener("click", renderQuestion);
+    $("explainBtn").addEventListener("click", showHint);
+    $("restartBtn").addEventListener("click", () => buildDeck());
+    $("againBtn").addEventListener("click", () => buildDeck());
+    $("shuffleBtn").addEventListener("click", () => buildDeck());
+    $("reviewBtn").addEventListener("click", reviewMissed);
+    $("summaryReviewBtn").addEventListener("click", reviewMissed);
+    $("moduleSelect").addEventListener("change", () => buildDeck());
+    $("lengthSelect").addEventListener("change", () => buildDeck());
+
+    initSelectors();
+    buildDeck();
+  </script>
+</body>
+</html>
