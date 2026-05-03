@@ -642,6 +642,7 @@
               <option value="30">30 preguntas</option>
               <option value="45" selected>45 preguntas</option>
               <option value="60">60 preguntas</option>
+              <option value="75">75 preguntas</option>
               <option value="all">Todas</option>
             </select>
           </label>
@@ -768,6 +769,52 @@
       { t: "Registros bibliograficos", d: "Media", q: "El campo 655 se usa para...", a: 1, o: ["ISBN", "Genero o forma", "Nombre de persona", "Origen de catalogacion"], e: "655 corresponde a termino de indizacion - genero o forma." },
       { t: "Registros bibliograficos", d: "Alta", q: "En el registro Dublin Core del ejemplo, dc.abstract corresponde a...", a: 0, o: ["La narracion/resumen de la obra", "El ISBN solamente", "La lengua original", "La editorial"], e: "dc.abstract contiene el resumen sobre el pequeno principe y su travesia." }
     ];
+
+    const EXTRA_QUESTIONS = [
+      { t: "Analisis documental", d: "Media", q: "Cuando el analisis documental traduce, resume o indiza, lo hace para cambiar el documento a una forma...", a: 2, o: ["Mas extensa que la original", "Decorativa y comercial", "Diferente de la original pero util para recuperar", "Reservada solo para archivo historico"], e: "La idea central es representar el documento de otra manera para facilitar consulta y recuperacion.", h: "Fijate en el verbo representar: no se trata de copiar ni adornar, sino de crear una version funcional para encontrar el contenido." },
+      { t: "Analisis documental", d: "Alta", q: "Si una persona resume el contenido con sus creencias personales, aparece sobre todo una problematica de naturaleza...", a: 1, o: ["Linguistica", "Extralinguistica", "Tipografica", "Cronologica"], e: "La naturaleza extralinguistica incluye esquemas del autor y creencias del analista.", h: "La pista esta en lo que viene de fuera del texto: creencias, esquemas mentales y contexto del analista." },
+      { t: "Analisis documental", d: "Base", q: "Un documento sonoro pertenece a la tipologia por...", a: 0, o: ["Soporte fisico", "Difusion", "Contenido informativo", "Campo MARC"], e: "Los documentos sonoros aparecen en la lista de soportes fisicos junto con graficos, iconograficos y audiovisuales.", h: "Preguntate si 'sonoro' describe el modo material/formato del documento, su publicacion o su nivel de informacion." },
+      { t: "Analisis documental", d: "Media", q: "Un documento inedito se clasifica, segun la presentacion, por su...", a: 3, o: ["Soporte fisico", "Idioma", "Extension", "Difusion"], e: "En difusion aparecen publicados, reservados e ineditos.", h: "La palabra 'inedito' habla de si se publico o no, no del tema ni del soporte." },
+      { t: "Indizacion", d: "Media", q: "El punto de acceso por materias se establece en la parte del analisis documental llamada...", a: 2, o: ["Descripcion fisica", "Adquisicion", "Analisis del contenido", "Mencion de edicion"], e: "El analisis de contenido identifica y representa la materia de los documentos para permitir recuperacion.", h: "Busca la parte que trabaja con la materia o tema del documento, no con datos editoriales." },
+      { t: "Indizacion", d: "Alta", q: "Si un sistema devuelve demasiados resultados irrelevantes por ambiguedad terminologica, el problema se acerca a...", a: 1, o: ["Exhaustividad perfecta", "Ruido documental", "Catalogacion descriptiva", "Nota de sumario"], e: "Los lenguajes libres pueden producir ambiguedad, silencio y ruido documental.", h: "Ruido es cuando aparece demasiado que no sirve; silencio es cuando no aparece lo que si deberia aparecer." },
+      { t: "Indizacion", d: "Alta", q: "Si un usuario no recupera documentos pertinentes porque el termino usado no coincide con el sistema, hablamos de...", a: 0, o: ["Silencio documental", "Resumen analitico", "Mencion de titulo", "Relacion partitiva"], e: "La ambiguedad y falta de control pueden producir silencio documental: documentos pertinentes no recuperados.", h: "Contrasta silencio con ruido: silencio es ausencia de resultados pertinentes; ruido es exceso de resultados no pertinentes." },
+      { t: "Indizacion", d: "Media", q: "Las palabras clave se extraen de forma automatica principalmente a partir de titulo, resumen y a veces...", a: 3, o: ["Numero de control", "Codigo de barras", "Nombre del catalogador", "Texto completo"], e: "El material indica que cada vez mas se extraen del texto completo de documentos registrados.", h: "La pregunta apunta a la fuente textual de donde una computadora puede sacar terminos significativos." },
+
+      { t: "Resumenes documentales", d: "Media", q: "Si un resumen agrega una opinion que el documento original no contiene, falla principalmente en el criterio de...", a: 1, o: ["Brevedad", "Objetividad", "Textualidad", "Soporte"], e: "El criterio objetivo indica no incluir afirmaciones ni aseveraciones no contenidas en el documento original.", h: "Busca el criterio que protege contra meter juicios, interpretaciones o afirmaciones externas." },
+      { t: "Resumenes documentales", d: "Alta", q: "Un resumen que solo se entiende si el lector consulta el documento original incumple el criterio de ser...", a: 2, o: ["Exhaustivo", "Breve", "Independiente", "Automatizado"], e: "Independiente significa que debe entenderse por si mismo.", h: "La clave esta en la autonomia del texto: el resumen debe funcionar sin tener el original al lado." },
+      { t: "Resumenes documentales", d: "Base", q: "Cual recomendacion ayuda a la recuperacion automatizada?", a: 0, o: ["Usar palabras significativas tomadas del texto", "Eliminar todos los terminos tecnicos", "Usar solo pronombres", "Evitar mencionar el tema principal"], e: "El material recomienda usar palabras significativas del texto para apoyar la recuperacion automatizada.", h: "Piensa como buscaria una computadora: necesita terminos con carga semantica, no palabras vacias." },
+      { t: "Resumenes documentales", d: "Media", q: "Cual elemento del resumen responde al 'para que' del documento?", a: 3, o: ["Resultados", "Aspectos teoricos", "Introduccion", "Objetivo o proposito"], e: "El objetivo o proposito expresa la finalidad del documento.", h: "El 'para que' o intencion se relaciona con proposito, no con hallazgos finales." },
+      { t: "Resumenes documentales", d: "Alta", q: "Segun los lineamientos, por que se omiten graficos, tablas y referencias en un resumen documental?", a: 2, o: ["Porque son ilegales", "Porque siempre son falsos", "Porque el resumen debe concentrarse en contenido esencial textual", "Porque solo importan los autores"], e: "Los lineamientos orientan a dejar fuera elementos accesorios para mantener brevedad y esencialidad.", h: "Relaciona esta respuesta con brevedad y esencialidad: el resumen no reproduce todos los apoyos del documento." },
+
+      { t: "Tipos de resumen", d: "Base", q: "Cual tipo de resumen se considera el mas elemental por su cercania al indice?", a: 1, o: ["Analitico", "Indicativo", "Informativo", "Literario"], e: "El indicativo es el mas elemental y cercano al indice.", h: "El mas breve y general suele acercarse mas a un indice que a una explicacion completa." },
+      { t: "Tipos de resumen", d: "Media", q: "Si un resumen incluye objetivos, metodos, resultados y conclusiones en 150 palabras, probablemente es...", a: 0, o: ["Informativo", "Indicativo", "Literario", "No descriptor"], e: "El informativo suele tener 100 a 300 palabras e incluye esos componentes.", h: "Mira dos pistas juntas: componentes completos y extension media." },
+      { t: "Tipos de resumen", d: "Alta", q: "Un trabajo final de graduacion podria justificar un resumen...", a: 3, o: ["Indicativo de 25 palabras", "De palabras clave automaticas", "De campo 653", "Analitico y muy detallado"], e: "El resumen analitico se utiliza en informes y trabajos finales de graduacion por su mayor detalle.", h: "Cuando el documento es complejo y largo, el resumen que consume mas tiempo puede tener sentido." },
+      { t: "Tipos de resumen", d: "Media", q: "En el campo 520, el primer indicador 1 significa...", a: 2, o: ["Sumario", "Resumen", "Reseña", "Aviso sobre contenido"], e: "En 520, el indicador 1 corresponde a reseña.", h: "Recuerda la secuencia del PDF: # sumario, 1 reseña, 2 alcance y contenido, 3 resumen, 4 aviso." },
+      { t: "Tipos de resumen", d: "Alta", q: "El subcampo usado en 520 para colocar el sumario o resumen es...", a: 0, o: ["$a", "$2", "$x", "$z"], e: "El campo 520 usa el subcampo $a para sumario, etc.", h: "En varios campos MARC, $a suele contener el dato principal del campo." },
+
+      { t: "Lenguajes documentales", d: "Media", q: "Normalizar o unificar terminologias sirve para...", a: 1, o: ["Hacer mas ambiguas las busquedas", "Mejorar consistencia entre indizacion y recuperacion", "Eliminar todos los sinonimos del idioma", "Evitar que existan materias"], e: "La normalizacion ayuda a que el sistema use terminos consistentes para representar y recuperar.", h: "Piensa en el problema de sinonimos: si cada analista usa una palabra distinta, recuperar se vuelve dificil." },
+      { t: "Lenguajes documentales", d: "Alta", q: "Que afirmacion describe mejor la tension de un lenguaje documental?", a: 2, o: ["Es facil al indizar y dificil al recuperar", "No necesita reglas", "Exige mas cuidado al indizar para facilitar la recuperacion", "Solo sirve para portadas"], e: "El material dice que su dificultad esta en el proceso de indizacion, lo que se traduce en facilidad en la recuperacion.", h: "La carga de trabajo se mueve hacia quien organiza, para que quien busca encuentre mas facil." },
+      { t: "Lenguajes documentales", d: "Media", q: "La indizacion social y la informacion temporal se asocian en el material con...", a: 0, o: ["Listados de descriptores libres", "Campo 655", "Resumen analitico", "Dublin Core"], e: "Los descriptores libres se usan en informacion temporal, audiovisual web e indizacion social.", h: "Busca una herramienta flexible y rapida, no una fuente controlada rigida." },
+      { t: "Lenguajes documentales", d: "Alta", q: "Si un vocabulario no verifica previamente si los terminos existen en una lista establecida, entonces no es...", a: 3, o: ["Monolingue", "Alfabetico", "Humano", "Controlado"], e: "Los listados de descriptores libres no son lenguajes controlados.", h: "La palabra clave es verificar contra una lista autorizada: eso es justamente control terminologico." },
+
+      { t: "Tesauros", d: "Base", q: "En un tesauro, USE indica que...", a: 1, o: ["El termino esta prohibido sin alternativa", "Debe usarse otro termino preferente", "Hay una relacion geografica", "El termino es un campo MARC"], e: "USE remite desde un termino no preferente hacia el descriptor preferente.", h: "USE funciona como una flecha: desde la forma no preferida hacia la forma que si debes usar." },
+      { t: "Tesauros", d: "Media", q: "UP en un tesauro se usa para indicar...", a: 2, o: ["Un campo cronologico", "Una nota de contenido", "Usado por / termino no preferente asociado al preferente", "Una subdivision geografica"], e: "UP muestra los terminos no preferentes relacionados con el descriptor preferente.", h: "Si estas parado en el termino correcto, UP te muestra las variantes que remiten hacia el." },
+      { t: "Tesauros", d: "Alta", q: "Si 'mamiferos TG animales', entonces animales es...", a: 0, o: ["Termino generico", "Termino especifico", "Termino relacionado", "Nota de historia"], e: "TG identifica el termino generico o superordinado.", h: "Lee la relacion hacia arriba: mamiferos pertenece a una clase mas amplia." },
+      { t: "Tesauros", d: "Alta", q: "Si 'animales TE mamiferos', entonces mamiferos es...", a: 1, o: ["Termino generico", "Termino especifico", "Termino no controlado", "Definicion"], e: "TE identifica el termino especifico o subordinado.", h: "Lee la relacion hacia abajo: animales contiene subclases, una de ellas mamiferos." },
+      { t: "Tesauros", d: "Media", q: "Una nota NH sirve para...", a: 3, o: ["Dar el precio del documento", "Registrar un enlace web", "Indicar el ISBN", "Explicar la historia de uso de un termino"], e: "NH es nota de historia, como indicar desde cuando se introdujo un termino.", h: "NH no define el concepto; cuenta algo sobre el uso historico del termino." },
+      { t: "Tesauros", d: "Media", q: "DEF en la gramatica de tesauros se usa para...", a: 0, o: ["Dar una definicion del termino", "Enviar a otro descriptor", "Marcar termino generico", "Registrar una fecha cronologica"], e: "DEF introduce definiciones, como el ejemplo de claroscuro.", h: "La abreviatura casi lo dice: DEF se relaciona con definir." },
+      { t: "Tesauros", d: "Alta", q: "Cual forma respeta la recomendacion sobre articulos iniciales?", a: 2, o: ["Las Artes", "El Estado siempre", "Artes", "Los documentos"], e: "El material recomienda omitir articulos iniciales: Artes mejor que las Artes.", h: "En terminos preferentes se suele evitar empezar por articulos cuando no forman parte del nombre propio." },
+      { t: "Tesauros", d: "Alta", q: "Cual caso justifica retener el articulo inicial?", a: 1, o: ["Las artes como tema general", "El Salvador como pais", "El estado como concepto politico", "La fotocopia como proceso"], e: "El Salvador es un nombre propio donde el articulo forma parte del nombre.", h: "La excepcion ocurre cuando el articulo pertenece al nombre oficial o reconocido." },
+
+      { t: "Registros bibliograficos", d: "Base", q: "En el ejemplo MARC, 040 se relaciona con...", a: 2, o: ["Titulo preferido", "ISBN", "Origen de la catalogacion", "Nota de sumario"], e: "040 registra el origen de la catalogacion, como Biblioteca EBCI, idioma y norma.", h: "Busca el campo que identifica quien hizo o de donde procede la catalogacion." },
+      { t: "Registros bibliograficos", d: "Media", q: "El campo 041 del ejemplo registra...", a: 0, o: ["Idiomas", "Genero literario", "Punto cronologico", "Materia"], e: "041 aparece como campo de idiomas, con $a spa y $h fre.", h: "La pista esta en los codigos spa y fre: son codigos de lengua." },
+      { t: "Registros bibliograficos", d: "Media", q: "El campo 082 se asocia con...", a: 3, o: ["Localizacion electronica", "Genero o forma", "Resumen", "Numero de clasificacion Dewey"], e: "082 corresponde al numero de clasificacion Dewey.", h: "Dewey es clasificacion; no es un resumen ni un enlace." },
+      { t: "Registros bibliograficos", d: "Alta", q: "El campo 856 se utiliza para...", a: 1, o: ["Fechas asociadas", "Localizacion y acceso electronicos", "Termino cronologico", "Nombre geografico"], e: "856 registra localizacion y acceso electronicos, como un URL.", h: "Cuando veas un enlace o URL en MARC, piensa en acceso electronico." },
+      { t: "Registros bibliograficos", d: "Media", q: "En Dublin Core, dc.creator corresponde a...", a: 0, o: ["Saint-Exupery como creador", "El resumen de la obra", "El pais de cobertura", "El formato computadora"], e: "dc.creator registra al creador o autor de la obra.", h: "Creator en Dublin Core se parece al autor o responsable principal." },
+      { t: "Registros bibliograficos", d: "Media", q: "En Dublin Core, dc.subject se usa para...", a: 2, o: ["La editorial", "La extension fisica", "Materias como literatura europea, imaginacion o novela", "La URL del recurso"], e: "dc.subject registra los temas o materias del recurso.", h: "Subject significa asunto o tema: busca materias, no datos de publicacion." }
+    ];
+
+    QUESTIONS.push(...EXTRA_QUESTIONS);
 
     const topicColors = {
       "Analisis documental": "#246b8f",
@@ -936,13 +983,29 @@
       updateStats();
     }
 
+    function getHint(q) {
+      if (q.h) return q.h;
+
+      const topicHints = {
+        "Analisis documental": "Distingue entre representar contenido para recuperarlo y tareas externas como comprar, decorar o conservar fisicamente el documento.",
+        "Indizacion": "Busca la opcion que hable de representar materias con terminos. Si aparece ambiguedad, piensa en ruido o silencio documental.",
+        "Resumenes documentales": "Recuerda los criterios: brevedad reduce terminos, exhaustividad evita omisiones sustanciales, objetividad evita opiniones e independencia permite entenderlo solo.",
+        "Tipos de resumen": "Compara extension y detalle: indicativo es breve, informativo incluye metodo/resultados/conclusiones, analitico es mucho mas detallado.",
+        "Lenguajes documentales": "La clave es el control terminologico: normalizar palabras cuesta al indizar, pero mejora la busqueda del usuario.",
+        "Tesauros": "Lee las siglas como relaciones: USE remite al preferente, UP recoge variantes, TG sube a lo general, TE baja a lo especifico y TR asocia.",
+        "Registros bibliograficos": "Identifica si el dato describe persona, materia, genero, resumen, idioma o enlace. En MARC, el numero del campo suele indicar esa funcion."
+      };
+
+      return topicHints[q.t] || "Elimina primero las opciones que pertenecen a otro proceso documental; luego compara la palabra clave de la pregunta con la funcion del concepto.";
+    }
+
     function showHint() {
       if (state.hintVisible) return;
       state.hintVisible = true;
       const q = state.deck[state.index];
       const fb = $("feedback");
       fb.className = "feedback show";
-      fb.innerHTML = `<strong>Pista:</strong> Esta pregunta pertenece a ${q.t}. Piensa en la funcion del concepto dentro del proceso documental antes de responder.`;
+      fb.innerHTML = `<strong>Pista util:</strong> ${getHint(q)}`;
     }
 
     function showSummary(title, text) {
